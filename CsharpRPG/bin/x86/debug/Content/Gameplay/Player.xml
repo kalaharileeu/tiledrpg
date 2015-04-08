@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Player>
+  <image source="Gameplay/player">
+    <Effects>SpriteSheetEffect</Effects>
+  </image>
+  <MoveSpeed>100</MoveSpeed>
+</Player>
