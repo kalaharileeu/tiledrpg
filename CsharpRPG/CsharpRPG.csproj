@@ -61,6 +61,7 @@
     <Compile Include="EnemyCreator.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Layer.cs" />
+    <Compile Include="LoadParameters.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="PlayerBullet.cs" />
     <Compile Include="ScrollingBackground.cs" />
@@ -143,6 +144,22 @@
     <Content Include="Content\Gameplay\Enemy\enemy2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Gameplay\Explosion\explosion.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Content\Gameplay\Explosion\largeexplosion.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="Content\Gameplay\Explosion\smallexplosion.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Content\Gameplay\Explosion\parameters.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Gameplay\Map\scene2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Content\Gameplay\TileSheets\blocks1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
