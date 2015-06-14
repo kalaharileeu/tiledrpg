@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using System.Diagnostics;
+
 namespace CsharpRPG
 {
     public class Player
@@ -16,17 +18,50 @@ namespace CsharpRPG
         public Vector2 Velocity;
         public float MoveSpeed;
 
-        BulletHandler bulletHandler;
+        bool dying = false;
+        bool dead = false;
+        string animatedtype;
+        Rectangle deathvector;
 
         public Player()
         {
             Velocity = Vector2.Zero;
-            bulletHandler = new BulletHandler();
+            animatedtype = "largeexplosion";
+        }
+
+        public void SetDying(Rectangle dv)
+        {
+            deathvector = new Rectangle();
+            deathvector = dv;
+            dying = true;
+            //image.IsActive = false;
+        }
+
+        public bool isDead
+        { 
+            get{ return dead; }
+        }
+
+        public void Dead(bool v)
+        {
+            dead = v;
+        }
+
+        public bool Dying
+        {
+            get { return dying; }
+        }
+
+        public Rectangle GetCurrentRect()
+        {
+            Rectangle collisionRect = new Rectangle((int)image.Position.X, (int)image.Position.Y, image.width, image.height);
+            return collisionRect;
         }
 
         public void LoadContent()
         {
             image.LoadContent();
+            image.Position.Y = 80;
         }
 
         public void UnloadContent()
@@ -47,10 +82,13 @@ namespace CsharpRPG
                 else if (InputManager.Instance.KeyDown(Keys.Up))
                 {
                     Velocity.Y = -MoveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    image.SpriteSheetEffect.CurrentFrame.Y = 3;//Y coordinate for down is 0, left Y = 1, right Y= 2, up y = 3
+                    image.SpriteSheetEffect.CurrentFrame.Y = 0;//Y coordinate for down is 0, left Y = 1, right Y= 2, up y = 3
                 }
                 else
+                {
                     Velocity.Y = 0;
+                    image.SpriteSheetEffect.CurrentFrame.Y = 0;
+                }
             }
 
             if (Velocity.Y == 0)//If you do not want to do diagonal movement
@@ -58,25 +96,32 @@ namespace CsharpRPG
                 if (InputManager.Instance.KeyDown(Keys.Right))
                 {
                     Velocity.X = MoveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    image.SpriteSheetEffect.CurrentFrame.Y = 2;//Y coordinate for down is 0, left Y = 1, right Y= 2, up y = 3
+                    image.SpriteSheetEffect.CurrentFrame.Y = 0;//Y coordinate for down is 0, left Y = 1, right Y= 2, up y = 3
                 }
                 else if (InputManager.Instance.KeyDown(Keys.Left))
                 {
                     Velocity.X = -MoveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    image.SpriteSheetEffect.CurrentFrame.Y = 1;//Y coordinate for down is 0, left Y = 1, right Y= 2, up y = 3
+                    image.SpriteSheetEffect.CurrentFrame.Y = 0;//Y coordinate for down is 0, left Y = 1, right Y= 2, up y = 3
                 }
                 else
+                {
                     Velocity.X = 0;
+                    image.SpriteSheetEffect.CurrentFrame.Y = 0;
+                }
             }
 
             if (InputManager.Instance.KeyPressed(Keys.Space))
-                bulletHandler.addPlayerBullet((int)image.Position.X, (int)image.Position.Y);
+            {
+                //image height and width is in pixels given by xml file
+                BulletHandler.Instance.addPlayerBullet((int)(image.Position.X + image.width), (int)(image.Position.Y + (image.height / 2)));
+                SoundManager.Instance.PlayPhaser();
+            }
 
 
             if (Velocity.X == 0 && Velocity.Y == 0)//if the player is not moving
                 image.IsActive = false;
 
-            bulletHandler.update(gameTime);
+            //BulletHandler.Instance.update(gameTime);
             image.Update(gameTime);
             image.Position += Velocity;
             //image.Position.X = 620;
@@ -84,9 +129,14 @@ namespace CsharpRPG
         
         public void Draw(SpriteBatch spriteBatch)
         {
-            bulletHandler.draw(spriteBatch);
+            BulletHandler.Instance.draw(spriteBatch);
             image.Draw(spriteBatch);
         }
- 
+
+
+        public string Animatedtype 
+        {
+            get { return animatedtype; }
+        }
     }
 }

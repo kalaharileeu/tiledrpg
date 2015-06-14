@@ -11,6 +11,13 @@ namespace CsharpRPG
     {
         protected Image image;
         public bool IsActive;
+        public Vector2 AmountOfFrames;
+
+        public void SetAmountFrames(Vector2 value)
+        {
+            AmountOfFrames.X = value.X;
+            AmountOfFrames.Y = value.Y;
+        }
 
         public ImageEffect()
         {

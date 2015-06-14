@@ -14,6 +14,18 @@ namespace CsharpRPG
         static List<PlayerBullet> listplayerbullets;
         List<EnemyBullet> listenemybullets;
 
+        private static BulletHandler instance;
+
+        public static BulletHandler Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new BulletHandler();
+                return instance;
+            }
+        }
+
         public BulletHandler()
         {
             listplayerbullets = new List<PlayerBullet>();
@@ -23,6 +35,11 @@ namespace CsharpRPG
         public static List<PlayerBullet> Listplayerbullets
         {
             get { return listplayerbullets; }
+        }
+
+        public void addEnemyBullet(int x, int y)
+        {
+            listenemybullets.Add(new EnemyBullet(x, y));
         }
 
         public void addPlayerBullet(int x, int y)
@@ -42,20 +59,14 @@ namespace CsharpRPG
 
         public void update(GameTime gametime)
         {
-            int saveindex = 100;
-            int index = 0;
-            foreach (PlayerBullet pb in listplayerbullets)
-            {
-                pb.Update(gametime);
-                if (pb.isDead == true)
-                {
-                    saveindex = index;
-                }
-                index++;
-            }
-            if(saveindex < 100)
-                listplayerbullets.RemoveAt(saveindex);
+            listplayerbullets.RemoveAll(PlayerBullet => PlayerBullet.isDead == true);
+            listenemybullets.RemoveAll(EnemyBullet => EnemyBullet.isDead == true);
 
+            foreach (PlayerBullet pb in listplayerbullets)
+                pb.Update(gametime);
+
+            foreach (EnemyBullet eb in listenemybullets)
+                eb.Update(gametime);
         }
 
         public void draw(SpriteBatch spriteBatch)

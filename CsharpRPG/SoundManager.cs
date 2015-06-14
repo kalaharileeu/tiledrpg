@@ -17,27 +17,34 @@ namespace CsharpRPG
         ContentManager content;
         public SoundEffect phaser;
         public SoundEffect electro;
-        //public SoundEffect love;
 
-        public SoundManager()
+        private static SoundManager instance;
+
+        public static SoundManager Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new SoundManager();
+                return instance;
+            }
+        }
+
+        public void LoadContent()
         {
             content = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
             phaser = content.Load<SoundEffect>("Sound/phaser");
             electro = content.Load<SoundEffect>("Sound/DST_ElectroRock");
-            //love = content.Load<SoundEffect>("Sound/love");
-            //phaser.Play();//Needed to install openAL here
-            electro.Play();
-/*
-            try
-            {
-                // Play the music
-                //MediaPlayer.Play(love);
+        }
 
-                // Loop the currently playing song
-                MediaPlayer.IsRepeating = true;
-            }
-            catch { }
-*/
+        public void PlayPhaser()
+        {
+            phaser.Play();
+        }
+
+        public void PlayMusic()
+        {
+            electro.Play();
         }
     }
 }

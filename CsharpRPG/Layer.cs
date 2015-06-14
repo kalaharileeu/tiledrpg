@@ -89,14 +89,14 @@ namespace CsharpRPG
             Image.UnloadContent();
         }
 
-        public void Update(GameTime gameTime, ref Player player)//ptimise
+        public void Update(GameTime gameTime, Player player)//ptimise
         {
             //Image.Update(gameTime);//this is not in his code
             foreach (Tile tile in underlayTiles)
-                tile.Update(gameTime, ref player);
+                tile.Update(gameTime, player);
 
             foreach (Tile tile in overlayTiles)
-                tile.Update(gameTime, ref player);
+                tile.Update(gameTime, player);
         }
 
         public void Draw(SpriteBatch spriteBatch, string drawType)//Optimse not to loop through everytile

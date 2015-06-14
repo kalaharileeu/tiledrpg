@@ -61,8 +61,21 @@ namespace CsharpRPG
         protected bool dying = false;
         int updatedelay = 0;
         Rectangle deathvector;
+        string animatedtype;
+        float firing_seconds;
 
-        public void dead(Rectangle dv)
+        public Enemy()
+        {
+            firing_seconds = 0;
+            properties = new Properties();
+            image = new Image();
+
+            animatedtype = "smallexplosion";
+            numFrames = 1;
+            scrollSpeed = GameplayScreen.scrollspeed;
+        }
+
+        public void Dead(Rectangle dv)
         {
             deathvector = new Rectangle();
             deathvector = dv;
@@ -71,16 +84,12 @@ namespace CsharpRPG
 
         public bool Dying
         {
-            get{return dying;}
+            get { return dying; }
         }
 
-        public Enemy()
+        public string Animatedtype
         {
-            properties = new Properties();
-            image = new Image();
-
-            numFrames = 1;
-            scrollSpeed = GameplayScreen.scrollspeed;
+            get { return animatedtype; }
         }
 
         public string Type
@@ -117,7 +126,7 @@ namespace CsharpRPG
                 image2 = new Image();
                 foreach (Properties.Property v in properties.ListOfProperties)
                 {
-                    image2.Position.X = -640;
+                    image2.Position.X = 640;
                     image2.Position.Y = y;
                     if (v.name == "Height")
                         image2.height = Convert.ToInt32(v.value);
@@ -152,9 +161,9 @@ namespace CsharpRPG
                 {
                     scroll();
                     image2.IsActive = true;
-                        if (image2.Position.X >= -1)
+                        if (image2.Position.X <= 1)
                         {
-                            image2.Position.X = -640;
+                            image2.Position.X = 640;
                             image.Position.X = 0;
                         }
                     image2.Update(gameTime);
@@ -165,16 +174,29 @@ namespace CsharpRPG
             }
             else 
             {
-                //scroll();
+                if (image.Position.X > 640)
+                    scroll();
+                else
+                    image.Position.X -= 3;
+                //if the position is smaller that 1 then it can die
+                if (image.Position.X < -20)
+                    dying = true;
                 image.IsActive = true;
                 image.Update(gameTime);
             }
+
+            firing_seconds += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (firing_seconds > 5.0)
+            {
+                BulletHandler.Instance.addEnemyBullet((int)image.Position.X, (int)image.Position.Y);
+                firing_seconds = 0;
+            }
+
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            //if (type == "ScrollingBackground")
-            //    this.image.Scale.X -= 0.001F;
             if (type == "ScrollingBackground")
             {
                 image2.Draw(spriteBatch);
@@ -190,11 +212,11 @@ namespace CsharpRPG
             {
                 if (type == "ScrollingBackground")
                 {
-                    image2.Position.X += scrollSpeed;
-                    image.Position.X += scrollSpeed;
+                    image2.Position.X -= scrollSpeed;
+                    image.Position.X -= scrollSpeed;
                 }
                 else
-                    image.Position.X += scrollSpeed;
+                    image.Position.X -= scrollSpeed;
                 
             }
         }

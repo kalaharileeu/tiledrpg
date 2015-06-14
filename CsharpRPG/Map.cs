@@ -26,9 +26,16 @@ namespace CsharpRPG
         [XmlElement("tilelayer")]
         public List<tilelayer> Layer;
         [XmlElement("objectgroup")]
-        public List<objectgroup> objectgroups;
-
+        public List<objectgroup> objectgroups;//In enemycreator.cs
         Vector2 TileDimensions;
+        
+        [XmlIgnore]
+        List<AnimatedGraphics> graphicslist;
+        [XmlIgnore]
+        Dictionary<string, Loader.parameter> parameterdictionary;
+
+
+        [XmlIgnore]
         CollisionManager collisionmanager;
 
         public map()
@@ -37,10 +44,24 @@ namespace CsharpRPG
             TileDimensions = Vector2.Zero;
             objectgroups = new List<objectgroup>();
             collisionmanager = new CollisionManager();
+            graphicslist = new List<AnimatedGraphics>();
+            parameterdictionary = new Dictionary<string, Loader.parameter>();//the data in Loader.parameter comes from xml
         }
 
+        void LoadAnimated (Rectangle r, string animatedtype)
+        {
+            graphicslist.Add(new AnimatedGraphics(animatedtype, r, parameterdictionary[animatedtype]));
+        }
+        [XmlIgnore]
+        public Dictionary<string, Loader.parameter> Parameterdictionary
+        {
+            get { return parameterdictionary; } 
+        }
+        
         public void LoadContent()
         {
+            SoundManager.Instance.LoadContent();
+            SoundManager.Instance.PlayMusic();
             TileDimensions.X = tilewidth;
             TileDimensions.Y = tileheight;
             foreach (tilelayer l in Layer)
@@ -63,6 +84,11 @@ namespace CsharpRPG
             foreach (tilelayer l in Layer)
                 l.UnloadContent();
 
+            foreach (AnimatedGraphics a in graphicslist)
+            {
+                a.UnloadContent();
+            }
+
             foreach (objectgroup o in objectgroups)
             {
                 foreach (Enemy e in o.Enemies)
@@ -70,17 +96,54 @@ namespace CsharpRPG
             }
         }
 
-        public void Update(GameTime gameTime, ref Player player)
+        public void Update(GameTime gameTime, Player player)
         {
+
             foreach (tilelayer l in Layer)
-                l.Update(gameTime, ref player);
+                l.Update(gameTime, player);
+
+            if (player.Dying && (!player.isDead))
+            {
+                LoadAnimated(player.GetCurrentRect(), player.Animatedtype);
+                player.Dead(true);
+            }
 
             foreach (objectgroup o in objectgroups)
             {
                 collisionmanager.checkEnemyPlayerBulletCollision(o.enemies);
 
+                bool update = false;//do not update the list of enenmies
+                int valuetoremove = 1000;//which one of the list of enemies to remove randomw high value
+                int i = 0;
                 foreach (Enemy e in o.Enemies)
-                    e.Update(gameTime);
+                {
+                    if (!e.Dying)
+                    {
+                        e.Update(gameTime);
+                    }
+                    else
+                    {
+                        LoadAnimated(e.GetCurrentRect(), e.Animatedtype);//Load the explosion if enemy dead
+                        update = true;
+                        valuetoremove = i;//it is important to remove
+                    }
+                    i++;
+                }
+
+                if(update)//Yes go for the update
+                {
+                    o.removeenemy(valuetoremove);//remove dying enemy from list
+                    update = false;
+                }
+
+                graphicslist.RemoveAll(AnimatedGraphics => AnimatedGraphics.Dead == true);
+                foreach (AnimatedGraphics a in graphicslist)
+                {
+                    if(!a.Dead)
+                        a.Update(gameTime);
+                }
+
+                BulletHandler.Instance.update(gameTime);
             }
         }
 
@@ -89,9 +152,11 @@ namespace CsharpRPG
             foreach (objectgroup o in objectgroups)
             {
                 foreach (Enemy e in o.Enemies)
-                    if(!e.Dying)
-                        e.Draw(spriteBatch);
+                    e.Draw(spriteBatch);
             }
+
+            foreach (AnimatedGraphics a in graphicslist)
+                a.Draw(spriteBatch);
 
             foreach (tilelayer l in Layer)
                 l.Draw(spriteBatch, drawType);

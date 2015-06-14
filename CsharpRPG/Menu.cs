@@ -76,6 +76,7 @@ namespace CsharpRPG
         }
 
         public Menu()
+        
         {
             id = String.Empty;
             itemNumber = 0;

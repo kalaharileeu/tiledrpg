@@ -35,12 +35,16 @@ namespace CsharpRPG
         Dictionary<string, ImageEffect> effectList;
         //This created with ImageEffect class in mind
         public string Effects;
+        [XmlIgnore]
+        public Vector2 amountofframes;
+
 
         public FadeEffect FadeEffect;
         public SpriteSheetEffect SpriteSheetEffect;
 
         void SetEffect<T>(ref T effect)//refernce to the effect so that we can modify it
         {
+
             if (effect == null)
                 effect = (T)Activator.CreateInstance(typeof(T));
             else
@@ -49,7 +53,9 @@ namespace CsharpRPG
                 var obj = this;
                 (effect as ImageEffect).LoadContent(ref obj);
             }
-            effectList.Add(effect.GetType().ToString().Replace("CsharpRPG.", ""), (effect as ImageEffect));
+            if(!effectList.ContainsKey((effect.GetType().ToString().Replace("CsharpRPG.", ""))))
+                effectList.Add(effect.GetType().ToString().Replace("CsharpRPG.", ""), (effect as ImageEffect));
+
         }
 
         public void ActivateEffect(string effect)
@@ -59,6 +65,9 @@ namespace CsharpRPG
                 effectList[effect].IsActive = true;
                 var obj = this;
                 effectList[effect].LoadContent(ref obj);
+                if ( effect == "SpriteSheetEffect")
+                    effectList[effect].SetAmountFrames(this.amountofframes);
+
             }
         }
 
@@ -102,6 +111,7 @@ namespace CsharpRPG
             Alpha = 1.0f;
             SourceRect = Rectangle.Empty;
             effectList = new Dictionary<string, ImageEffect>();
+            amountofframes = new Vector2(5, 1);//This is the default value for player
         }
 
         public void LoadContent()

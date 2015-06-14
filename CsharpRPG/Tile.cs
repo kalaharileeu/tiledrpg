@@ -26,7 +26,7 @@ namespace CsharpRPG
 
         public void scroll(int x)
         {
-            position.X += GameplayScreen.scrollspeed;
+            position.X -= GameplayScreen.scrollspeed;
             //position.X += Enemy.scr;
         }
 
@@ -40,10 +40,8 @@ namespace CsharpRPG
         public void UnloadContent()
         { }
         
-        public void Update(GameTime gameTime, ref Player player)
+        public void Update(GameTime gameTime, Player player)
         {
-
-
             if(state == "Solid")//Below is the collision handling
             {
                 Rectangle tileRect = new Rectangle((int)Position.X, (int)Position.Y,
@@ -53,6 +51,7 @@ namespace CsharpRPG
 
                 if (playerRect.Intersects(tileRect))
                 {
+                    
                     if (player.Velocity.X < 0)
                         player.image.Position.X = tileRect.Right;
                     else if (player.Velocity.X > 0)
@@ -61,8 +60,9 @@ namespace CsharpRPG
                         player.image.Position.Y = tileRect.Bottom;
                     else
                         player.image.Position.Y = tileRect.Top - player.image.SourceRect.Height;
-
+                    player.SetDying(player.GetCurrentRect());//The player is dead get its position
                     player.Velocity = Vector2.Zero;//This does not matter that much.
+                    //player.image.IsActive = false;
                 }
             }
         }

@@ -20,7 +20,7 @@ namespace CsharpRPG
                     {
                         if (Collision.RectRect(e.GetCurrentRect(), pb.GetCurrentRect()))
                         {
-                            e.dead(e.GetCurrentRect());
+                            e.Dead(e.GetCurrentRect());
                         }
                     }
                 }

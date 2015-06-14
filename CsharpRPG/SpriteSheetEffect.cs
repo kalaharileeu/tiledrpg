@@ -12,7 +12,13 @@ namespace CsharpRPG
         public int FrameCounter;
         public int SwitchFrame;
         public Vector2 CurrentFrame;
-        public Vector2 AmountOfFrames;
+/*        public Vector2 AmountOfFrames;
+
+        public void SetAmountFrames(Vector2 value)
+        {
+            AmountOfFrames.X = value.X;
+            AmountOfFrames.Y = value.Y;
+        }*/
 
         public int FrameWidth
         {
@@ -36,9 +42,10 @@ namespace CsharpRPG
 
         public SpriteSheetEffect()
         {
-            AmountOfFrames = new Vector2(3, 4);
+            AmountOfFrames = new Vector2();//This is for player
+            ///AmountOfFrames = amountofframes;
             CurrentFrame = new Vector2(1, 0);
-            SwitchFrame = 100;//To make animation slower or faster
+            SwitchFrame = 200;//To make animation slower or faster
             FrameCounter = 0;
         }
 
@@ -51,6 +58,7 @@ namespace CsharpRPG
         {
             base.UnloadContent();
         }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);

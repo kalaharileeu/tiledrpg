@@ -23,24 +23,9 @@ namespace CsharpRPG
                 enemies.RemoveAt(myindex);
         }
 
-/*        public List<Enemy> advancedenemies()
-        {  
-            List<Enemy> newenemies = new List<Enemy>();
-
-            foreach(Enemy e in enemies)
-            {
-                if (e.type == "ScrollingBackground")
-                {
-                     Enemy scrollEnemy = new ScrollingBackground(e);
-                }
-            }
-
-            return newenemies;
-        }
-*/
         public List<Enemy> Enemies
         { 
-            get 
+            get
             {
                 return enemies;
             }
