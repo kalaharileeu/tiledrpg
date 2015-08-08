@@ -6,7 +6,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.GamerServices;
+//using Microsoft.Xna.Framework.GamerServices;
+
+
 #endregion
 
 namespace CsharpRPG
@@ -51,8 +53,8 @@ namespace CsharpRPG
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            ScreenManager.Instance.GraphicsDevice = GraphicsDevice;//These variables from Screenmanager
-            ScreenManager.Instance.Spritebatch = spriteBatch;//From Screenmanager. both these have to ne done
+            ScreenManager.Instance.GraphicsDevice = GraphicsDevice;//These variables to Screenmanager
+            ScreenManager.Instance.Spritebatch = spriteBatch;//To Screenmanager. both these have to ne done
 
             ScreenManager.Instance.LoadContent(Content);
             // TODO: use this.Content to load your game content here

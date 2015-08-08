@@ -3,7 +3,7 @@
   <Image source="ScreenManager/FadeImage" >
     <Effects>FadeEffect</Effects>
     <Scale>
-      <X>640</X>
+      <X>639</X>
       <Y>480</Y>
     </Scale>
   </Image>

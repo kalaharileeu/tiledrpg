@@ -14,7 +14,7 @@ namespace CsharpRPG
             public string type;
             public string imagesource;
             public string effects;
-            public int life;//number of frames to animate till deat of animation
+            public int life;//number of frames to animate till death of animation
             public int numframesX;
             public int numframesY;
             public int movespeed;

@@ -33,7 +33,7 @@ namespace CsharpRPG
         public void LoadContent()
         {
             content = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
-            phaser = content.Load<SoundEffect>("Sound/phaser");
+            phaser = content.Load<SoundEffect>("phaser");
             electro = content.Load<SoundEffect>("Sound/DST_ElectroRock");
         }
 
